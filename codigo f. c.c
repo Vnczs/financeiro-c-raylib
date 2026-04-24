@@ -5,36 +5,34 @@
 
 #define ARQUIVO "dados_graficos.txt"
 
-// Estrutura para o histórico
+
 typedef struct {
     float valor;
     char tipo;
 } Transacao;
 
-// FUNÇÃO AUXILIAR: Formata o número para o padrão brasileiro (ex: 1.250,50)
 const char* FormatarDinheiro(float valor) {
     static char buffer[64];
     char temp[64];
     int n = 0, i, j, k, cont, posFim, pontos, tamFinal;
     
-    // Converte para string com 2 casas decimais (ponto americano)
     sprintf(temp, "%.2f", valor); 
     
     while (temp[n] != '.') n++; // Localiza o ponto decimal
     
     posFim = n;
     pontos = (posFim - 1) / 3;
-    tamFinal = posFim + pontos + 3; // +3 para a virgula e os dois centavos
+    tamFinal = posFim + pontos + 3; 
     
     buffer[tamFinal] = '\0';
     buffer[tamFinal - 1] = temp[n + 2];
     buffer[tamFinal - 2] = temp[n + 1];
-    buffer[tamFinal - 3] = ','; // Troca ponto por vírgula
+    buffer[tamFinal - 3] = ','; 
     
     k = tamFinal - 4;
     cont = 0;
     
-    // Preenche a parte inteira de trás para frente colocando os pontos
+    
     for (i = posFim - 1; i >= 0; i--) {
         if (cont == 3) {
             buffer[k--] = '.';
@@ -47,11 +45,11 @@ const char* FormatarDinheiro(float valor) {
 }
 
 int main() {
-    // 1. CONFIGURAÇÕES INICIAIS
+   
     InitWindow(600, 750, "Financeiro Pro - Padrao Bancario");
     SetTargetFPS(60);
 
-    // Carregar fonte (Ajuste o caminho se necessário)
+   
     Font fontePrincipal = LoadFontEx("C:/Windows/Fonts/arial.ttf", 32, 0, 250); 
     SetTextureFilter(fontePrincipal.texture, TEXTURE_FILTER_BILINEAR);
 
@@ -62,7 +60,6 @@ int main() {
     int i, totalTransacoes = 0;
     Transacao *historico = NULL;
 
-    // --- CARREGAMENTO DE DADOS ---
     FILE *f = fopen(ARQUIVO, "r");
     if (f) { 
         if (fscanf(f, "%f %d", &saldo, &totalTransacoes) != EOF) {
@@ -81,7 +78,6 @@ int main() {
     Rectangle btnGasto = { 310, 280, 210, 50 };
 
     while (!WindowShouldClose()) {
-        // 2. LÓGICA DE INTERAÇÃO
         Vector2 mouse = GetMousePosition();
         
         if (CheckCollisionPointRec(mouse, caixaTexto)) {
@@ -104,7 +100,6 @@ int main() {
             }
         }
 
-        // Processar cliques nos botões
         if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
             float valorDigitado = (float)atof(textoEntrada);
             char acao = ' ';
@@ -127,15 +122,12 @@ int main() {
             }
         }
 
-        // 3. DESENHO (INTERFACE)
         BeginDrawing();
             ClearBackground((Color){ 240, 242, 245, 255 }); 
 
-            // HEADER
             DrawRectangle(0, 0, 600, 100, (Color){ 33, 150, 243, 255 });
             DrawTextEx(fontePrincipal, "EXTRATO BANCARIO", (Vector2){ 180, 35 }, 24, 2, WHITE);
 
-            // CARD SALDO
             DrawRectangle(40, 80, 520, 100, WHITE);
             DrawRectangleLinesEx((Rectangle){ 40, 80, 520, 100 }, 1, LIGHTGRAY);
             DrawTextEx(fontePrincipal, "SALDO DISPONIVEL", (Vector2){ 230, 95 }, 14, 1, GRAY);
@@ -144,19 +136,15 @@ int main() {
             Vector2 tamSaldo = MeasureTextEx(fontePrincipal, saldoTexto, 38, 2);
             DrawTextEx(fontePrincipal, saldoTexto, (Vector2){ 300 - tamSaldo.x/2, 120 }, 38, 2, (saldo >= 0 ? DARKGREEN : RED));
 
-            // INPUT
             DrawTextEx(fontePrincipal, "VALOR (use . para centavos):", (Vector2){ 215, 190 }, 12, 1, DARKGRAY);
             DrawRectangleRec(caixaTexto, WHITE);
             DrawRectangleLinesEx(caixaTexto, 2, caixaAtiva ? BLUE : LIGHTGRAY);
             DrawTextEx(fontePrincipal, textoEntrada, (Vector2){ caixaTexto.x + 10, caixaTexto.y + 8 }, 24, 1, BLACK);
-
-            // BOTOES
             DrawRectangleRec(btnGanho, (Color){ 46, 125, 50, 255 });
             DrawTextEx(fontePrincipal, "ADICIONAR", (Vector2){ btnGanho.x + 50, btnGanho.y + 15 }, 18, 1, WHITE);
             DrawRectangleRec(btnGasto, (Color){ 198, 40, 40, 255 });
             DrawTextEx(fontePrincipal, "REMOVER", (Vector2){ btnGasto.x + 60, btnGasto.y + 15 }, 18, 1, WHITE);
 
-            // HISTORICO
             DrawTextEx(fontePrincipal, "ULTIMAS MOVIMENTACOES", (Vector2){ 50, 365 }, 16, 1, DARKGRAY);
             int inicio = (totalTransacoes > 7) ? totalTransacoes - 7 : 0;
             for (i = inicio; i < totalTransacoes; i++) {
@@ -175,7 +163,6 @@ int main() {
         EndDrawing();
     }
 
-    // --- SALVAMENTO E LIMPEZA ---
     f = fopen(ARQUIVO, "w");
     if (f) {
         fprintf(f, "%.2f %d\n", saldo, totalTransacoes);
