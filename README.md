@@ -5,7 +5,6 @@ Este é um projeto de gerenciador financeiro pessoal desenvolvido em **Linguagem
 ## Funcionalidades
 - Interface gráfica com layout vertical (Mobile Friendly).
 - Entrada de valores com formatação de moeda brasileira (R$).
-- Categorização de gastos (Comida, Lazer, Saúde e Salário).
 - Histórico automático das últimas transações.
 - Persistência de dados em arquivo `.txt`.
 
