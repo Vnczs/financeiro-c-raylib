@@ -13,7 +13,3 @@ Este é um projeto de gerenciador financeiro pessoal desenvolvido em **Linguagem
 - **Biblioteca Raylib** (Interface Gráfica)
 - **Dev-C++** (Ambiente de Desenvolvimento)
 
-## Como Executar
-1. Instale a Raylib no seu ambiente C.
-2. Compile o arquivo `main.c`.
-3. Certifique-se de que o arquivo da fonte está na mesma pasta do executável.
